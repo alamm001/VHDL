@@ -112,6 +112,7 @@ BEGIN
 		wait until rising_edge(sysClk);
 		enabled<='1';
 		wait until resetOut='1';
+		wait for 20 ns;
 		wait until rising_edge(sysClk);
 		enabled<='0';
 		wait until resetOut='0';

@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   16:34:06 04/10/2013
+-- Create Date:   11:16:01 04/11/2013
 -- Design Name:   
 -- Module Name:   /home/alam/Xilinx/projects/Watchdog/watchdog_tb.vhd
 -- Project Name:  Watchdog
@@ -46,9 +46,12 @@ ARCHITECTURE behavior OF watchdog_tb IS
     PORT(
          sysRst : IN  std_logic;
          sysClk : IN  std_logic;
-         wr : 		IN  std_logic;
+         wr : IN  std_logic;
          dataIn : IN  std_logic_vector(7 downto 0);
-         resetOut : OUT  std_logic
+         resetOut : OUT  std_logic;
+         debugStates : OUT  std_logic_vector(1 downto 0);
+         debugDivider : OUT  std_logic;
+         debugFlag : OUT  std_logic
         );
     END COMPONENT;
     
@@ -61,14 +64,17 @@ ARCHITECTURE behavior OF watchdog_tb IS
 
  	--Outputs
    signal resetOut : std_logic;
+   signal debugStates : std_logic_vector(1 downto 0);
+   signal debugDivider : std_logic;
+   signal debugFlag : std_logic;
 
    -- Clock period definitions
    constant sysClk_period : time := 10 ns;
  
+	signal localRst: std_logic;
+ 
 BEGIN
-	
-	
-	sysRst<=resetOut;
+	sysRst<=( resetOut or localRst);
 	
 	-- Instantiate the Unit Under Test (UUT)
    uut: watchdog PORT MAP (
@@ -76,7 +82,10 @@ BEGIN
           sysClk => sysClk,
           wr => wr,
           dataIn => dataIn,
-          resetOut => resetOut
+          resetOut => resetOut,
+          debugStates => debugStates,
+          debugDivider => debugDivider,
+          debugFlag => debugFlag
         );
 
    -- Clock process definitions
@@ -93,18 +102,15 @@ BEGIN
    stim_proc: process
    begin		
       -- hold reset state for 100 ns.
-		sysrst<='1';
+		localRst<='1';
       wait for 100 ns;	
-		sysRst<='0';
+		localRst<='0';
+
       wait for sysClk_period*10;
 
-
-
-      -- insert stimulus here 
+      -- insert stimulus here  
 		wdtWriteCmdSeq(sysClk,CMD_ON,wr,dataIn,10 ns );
-		wait for 60 ns;
-		
-		
+		--wait for 60 ns;
 
       wait;
    end process;

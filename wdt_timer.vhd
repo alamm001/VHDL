@@ -66,7 +66,7 @@ architecture Behavioral of wdt_timer is
 	signal timeoutValue: integer := TIMEOUT0;
 	
 	signal dividedClk:	STD_LOGIC;
-	signal timeOutFlag: 		STD_LOGIC;
+	signal timeOutFlag: 	STD_LOGIC:='0';
 	
 begin
 	
@@ -189,7 +189,7 @@ begin
 
 end process;
 
-outputs: process(sysClk)
+outputs: process(sysClk,sysRst)
 begin
 
 	if( rising_edge(sysClk) ) then
@@ -197,13 +197,22 @@ begin
 		if(sysRst='1') then
 				timeoutFlag<='0';
 		else
-		
-			if( curState = WDT_TIMEOUT ) then
-					timeoutFlag<='1';
-			else
-					timeoutFlag<='0';
-			end if;
-	
+
+			-- Handle state machine  --	
+			case curState is
+				when 	WDT_IDLE=>	
+						timeoutFlag <= '0';
+						
+				when 	WDT_RUNNING=>
+						timeoutFlag	<=	'0';
+						
+				when	WDT_TIMEOUT=>
+						timeoutFlag	<= '1';
+						
+				when 	others=>
+						timeoutFlag <= '0';
+				end case;
+
 		end if;
 	
 	end if;		
