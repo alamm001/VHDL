@@ -131,41 +131,32 @@ BEGIN
 		
 		-- ------------------ Test Restart ------------------ -- 
 		
-		wdtWriteCmdSeq(sysClk,CMD_RESTART,wr,dataIn,10 ns );
-		wait for 60 ns;
+--		wdtWriteCmdSeq(sysClk,CMD_RESTART,wr,dataIn,10 ns );
+--		wait for 60 ns;
 
 
 		-- ------------------- Test Lockout ------------------ -- 
 
 		-- invalid first byte
---		wdtWriteByte(sysClk,,wr,dataIn);
---		wdtWriteByte(sysClk,,wr,dataIn);
+--		wdtWriteByte(sysClk,UNLOCK1,wr,dataIn);
+--		wdtWriteByte(sysClk,UNLOCK1,wr,dataIn);
 --		wdtWriteByte(sysClk,CMD_RESTART,wr,dataIn);
 
 		
 		-- invalid second byte
---		wdtWriteByte(sysClk,,wr,dataIn);
---		wdtWriteByte(sysClk,,wr,dataIn);
+--		wdtWriteByte(sysClk,LOCKBYTE0,wr,dataIn);
+--		wdtWriteByte(sysClk,LOCKBYTE0,wr,dataIn);
 --		wdtWriteByte(sysClk,CMD_RESTART,wr,data);
-		
-		-- invalid command
---		wdtWriteByte(sysClk,,wr,dataIn);
---		wdtWriteByte(sysClk,,wr,dataIn);
---		wdtWriteByte(sysClk,"11111111",wr,dataIn);
-		
 
 
 		-- ------------------- Test Timeout ------------------ -- 
 
-		wdtWriteCmdSeq(sysClk,CMD_RESTART,wr,dataIn, 40 ns );
-		wait for 60 ns;
-
-
 		wdtWriteCmdSeq(sysClk,CMD_RESTART,wr,dataIn, 60 ns );
 		wait for 60 ns;
 
-		wdtWriteCmdSeq(sysClk,CMD_RESTART,wr,dataIn,10 ns );
+		wdtWriteCmdSeq(sysClk,CMD_RESTART,wr,dataIn, 40 ns );
 		wait for 60 ns;
+
 		
 		wait for 100 ns;
       wait;

@@ -105,7 +105,7 @@ BEGIN
 		-- initial conditions ==
 		restart<='0';
 		enabled<='0';
-		timeoutSel<="00";
+		timeoutSel<="01";
 		wait for 50 ns;
 		
 		-- turn on timer and wait for timer to reset system --
