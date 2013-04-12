@@ -68,7 +68,24 @@ begin
 					"11"	when	EXEC,
 					"00"	when  others;
 	
-
+	
+	
+-- States are determined by the bytes that written to 
+-- the dataIn data bus. Bytes are read from dataIn when
+--	WR signal is '1'.
+-- 
+--	The states are:
+--
+--		IDLE 		watchdog is waiting for the start of the 
+--					feed sequence
+--		UNLOCK	watchdog has recieved the correct 1st byte 
+--					of the feed sequence
+--		CMD		watchdog has recieved correct second byte 
+--					of feed sequence and is waiting for command byte
+--		EXEC		watchdog decodes command and sets control lines
+--					to the timer module (ouputs are handled in the 
+--					setOutput process). 	
+--
 
 setState: process(sysclk,sysRst) 
 
@@ -138,6 +155,22 @@ begin
 		
 end process;	
 
+
+-- Outputs are set according to current state of state machine.
+-- Outputs are the output control signals which act on the timer 
+-- module:
+--		restart output: 	restarts the timer
+--		timerEnb output: 	turns the timer on/off
+--		timerSel output:	selects between 4 preset watchdog time out 
+--								periods.
+--
+--		feedTimeoutFlag:	internal signal used to start the feed sequence 
+--								timeout counter. If the feed sequence does not 
+--								complete within the counter's timeout (ie: if 
+--								state does reach EXEC state), the state machine 
+--								returns to IDLE state and the feed sequence has 
+--								to be re started by the CPU.
+--	
 
 setOutput: process(sysclk,sysRst)
 
@@ -225,6 +258,10 @@ begin
 end process;
 
 
+-- Feed timeout begins when the feedTimeoutFlag is 
+-- asserted. This is usually when a valid first 
+-- byte is recieved and the flags value set to '1'
+-- within the setState state machine process.
 
 cmdFeedTimeout: process( sysclk, sysRst )
 
