@@ -109,8 +109,9 @@ BEGIN
       wait for sysClk_period*10;
 
       -- insert stimulus here  
-		wdtWriteCmdSeq(sysClk,CMD_ON,wr,dataIn,10 ns );
+		wdtWriteCmdSeq(sysClk,CMD_ON,wr,dataIn,15 ns );
 		--wait for 60 ns;
+		
 
       wait;
    end process;

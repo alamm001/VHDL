@@ -28,6 +28,9 @@ package wdt is
 	constant CMD_TIME2:   std_logic_vector( 7 downto 0 ):="11100010";
 	constant CMD_TIME3:   std_logic_vector( 7 downto 0 ):="11100011";
 
+	-- Clocks within which the feed sequence must complete --
+	constant FEED_TIMEOUT: integer := 12;
+	
  
 	-- amount of time (in system clocks) reset is asserted --	
 	constant RESET_TIME:	integer := 25;

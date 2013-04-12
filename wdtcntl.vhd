@@ -19,17 +19,15 @@
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 use work.wdt.all;
+
+-- The wdtcntl component interfaces via the dataIn and 
+--
+--
+--
+--
+--
+--
 
 entity wdtcntl is
     Port (	
@@ -40,13 +38,10 @@ entity wdtcntl is
 			  wr   : in  STD_LOGIC;
            dataIn : in  STD_LOGIC_VECTOR (7 downto 0);
            
-			  restart : out  STD_LOGIC;
+			  restart : out  STD_LOGIC;	
            timerEnb : out  STD_LOGIC;
            timerSel : out  STD_LOGIC_VECTOR (1 downto 0));
 
-				-- Clocks within which the feed sequence must complete --
-				constant FEED_TIMEOUT: integer := 12;
-	
 end wdtcntl;
 
 architecture Behavioral of wdtcntl is
