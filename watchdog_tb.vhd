@@ -108,29 +108,36 @@ BEGIN
 
       wait for sysClk_period*10;
 
-      -- insert stimulus here  
-		
+-- --------------- Test Timeout0  (x1) ---------------------- --
+      -- issue command to start watchdog, default timeout --  
 		wdtWriteCmdSeq(sysClk,CMD_ON,wr,dataIn,15 ns );
-		wait for 300 ns;
-		
-		
-		-- restart timer with TIME0 timeout --
+		wait for 800 ns;
+				
+-- --------------- Test Timeout1 (x10) ---------------------- --				
+		-- issue command to change timeout duration --
 		wdtWriteCmdSeq(sysClk,CMD_TIME1,wr,dataIn,15 ns);
 		wait for 60 ns;
-		
-		wdtWriteCmdSeq(sysClk,CMD_ON,wr,dataIn,15 ns );
-		wait for 500 ns;	
 	
-		-- restart timer with TIME0 timeout but with a restart --
+		-- issue command to start watchdog --
+		wdtWriteCmdSeq(sysClk,CMD_ON,wr,dataIn,15 ns );
+		wait for 800 ns;	
+		
+		
+-- ----------- Test Timeout1 (x10) with restart -------------- -- 		
+		-- issue command to change timeout duration --
 		wdtWriteCmdSeq(sysClk,CMD_TIME1,wr,dataIn,15 ns);
 		wait for 60 ns;
-		
+	
+		-- issue command to start watchdog --
 		wdtWriteCmdSeq(sysClk,CMD_ON,wr,dataIn,15 ns );
 		wait for 100 ns;	
 
-		wdtWriteCmdSeq(sysClk,CMD_RESTART,wr,dataIn,15 ns);		
-		wait for 100 ns;
+		-- restart timer  --
+		wdtWriteCmdSeq(sysClk,CMD_TIME1,wr,dataIn,15 ns);
+		wait for 60 ns;
 		
+		
+		wait for 500 ns;
       wait;
    end process;
 

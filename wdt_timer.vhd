@@ -92,7 +92,7 @@ begin
 	
 	if( rising_edge(sysClk) ) then
 
-		if( sysRst = '1' ) then	
+		if( sysRst = '1' or enabled='0') then	
 			dividerCounter:= 0;
 			dividedClk<='0';
 		
@@ -115,7 +115,7 @@ end process;
 
 setState: process( sysRst, sysClk)
 
-	variable timeoutCounter: integer :=1;
+	variable timeoutCounter: integer :=0;
 
 begin
 
@@ -123,14 +123,14 @@ begin
 		
 		if(sysRst='1') then
 			curState <= WDT_IDLE;
-			timeoutCounter:=1;
+			timeoutCounter:=0;
 		else
 
 			-- Handle a timer reset outside the state machine. --
 			--if 'restart' signal asserted, reset the timeoutCounter --
 			
 			if( restart='1' ) then
-					timeoutCounter:=1;
+					timeoutCounter:=0;
 			end if;					
 
 			
@@ -153,15 +153,7 @@ begin
 						if( enabled='0' ) then
 								curState <= WDT_IDLE;
 						else		
---								-- test for timeout --
---								if( timeoutCounter > timeoutValue ) then 
---									curState<=WDT_TIMEOUT;
---								else
---									  -- increment timeout counter --
---									  if( dividedClk='1' ) then
---											timeoutCounter:=timeoutCounter+1;
---									  end if;			
---								end if;
+								-- test for timeout --
 
 								if( dividedClk='1' ) then
 										timeoutCounter:=timeoutCounter+1;

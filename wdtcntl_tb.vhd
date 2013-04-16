@@ -99,7 +99,7 @@ BEGIN
    begin		
       -- hold reset state for 100 ns.
 		sysRst<='1';
-      wait for 100 ns;	
+      wait for 25 ns;	
 		sysRst<='0';
       wait for sysclk_period*10;
 
@@ -122,11 +122,11 @@ BEGIN
 			
 		-- ----------------- Test WDT on/off --------------- -- 
 						
-		wdtWriteCmdSeq(sysClk,CMD_ON,wr,dataIn,10 ns );
-		wait for 60 ns;
+--		wdtWriteCmdSeq(sysClk,CMD_ON,wr,dataIn,10 ns );
+--		wait for 60 ns;
 				
-		wdtWriteCmdSeq(sysClk,CMD_OFF,wr,dataIn, 10 ns	);
-		wait for 60 ns;
+--		wdtWriteCmdSeq(sysClk,CMD_OFF,wr,dataIn, 10 ns	);
+--		wait for 60 ns;
 		
 		
 		-- ------------------ Test Restart ------------------ -- 
@@ -138,24 +138,35 @@ BEGIN
 		-- ------------------- Test Lockout ------------------ -- 
 
 		-- invalid first byte
---		wdtWriteByte(sysClk,UNLOCK1,wr,dataIn);
---		wdtWriteByte(sysClk,UNLOCK1,wr,dataIn);
---		wdtWriteByte(sysClk,CMD_RESTART,wr,dataIn);
-
+		wdtWriteByte(sysClk,LOCKBYTE1,wr,dataIn);
+		wdtWriteByte(sysClk,LOCKBYTE1,wr,dataIn);
+		wdtWriteByte(sysClk,CMD_RESTART,wr,dataIn);
+		wait for 100 ns;
 		
 		-- invalid second byte
---		wdtWriteByte(sysClk,LOCKBYTE0,wr,dataIn);
---		wdtWriteByte(sysClk,LOCKBYTE0,wr,dataIn);
---		wdtWriteByte(sysClk,CMD_RESTART,wr,data);
+		wdtWriteByte(sysClk,LOCKBYTE0,wr,dataIn);
+		wdtWriteByte(sysClk,LOCKBYTE0,wr,dataIn);
+		wdtWriteByte(sysClk,CMD_RESTART,wr,dataIn);
+		wait for 100 ns;
 
+		-- valid first and second bytes
+		wdtWriteByte(sysClk,LOCKBYTE0,wr,dataIn);
+		wdtWriteByte(sysClk,LOCKBYTE1,wr,dataIn);
+		wdtWriteByte(sysClk,CMD_RESTART,wr,dataIn);
+		wait for 100 ns;
+		
+		wait for 400 ns;	
 
 		-- ------------------- Test Timeout ------------------ -- 
 
-		wdtWriteCmdSeq(sysClk,CMD_RESTART,wr,dataIn, 60 ns );
-		wait for 60 ns;
-
+		wdtWriteCmdSeq(sysClk,CMD_RESTART,wr,dataIn, 10 ns );
+		wait for 100 ns;
+		
 		wdtWriteCmdSeq(sysClk,CMD_RESTART,wr,dataIn, 40 ns );
-		wait for 60 ns;
+		wait for 100 ns;
+		
+		wdtWriteCmdSeq(sysClk,CMD_RESTART,wr,dataIn, 60 ns );
+		wait for 100 ns;
 
 		
 		wait for 100 ns;

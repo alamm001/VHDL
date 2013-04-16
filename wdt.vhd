@@ -33,7 +33,7 @@ package wdt is
 	
  
 	-- amount of time (in system clocks) reset is asserted --	
-	constant RESET_TIME:	integer := 25;
+	constant RESET_TIME:	integer := 20;
 
 
 end wdt;
